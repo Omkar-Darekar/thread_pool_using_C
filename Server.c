@@ -9,8 +9,8 @@
 #include<pthread.h>
 #include<signal.h>
 
-#define PORT 8887
-#define	thread_limit 10
+#define PORT 8080
+#define	thread_limit 15
 
 pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
 struct main_struct{
@@ -73,8 +73,8 @@ int main(){
 
 	address.sin_family = AF_INET; // Address family = Internet 
 	address.sin_port = htons(PORT);  //Set port number
-	//	address.sin_addr.s_addr = inet_addr("127.0.0.1");//Set IP address to localhost 
-	address.sin_addr.s_addr= INADDR_ANY;
+	address.sin_addr.s_addr = inet_addr("10.0.2.15");//Set IP address to localhost 
+	//address.sin_addr.s_addr= INADDR_ANY;
 	
 	if(bind(master_socket, (struct sockaddr *) &address, sizeof(address))<0){
 		puts("\n--------- BIND failed \n");

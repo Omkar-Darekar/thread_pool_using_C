@@ -6,10 +6,11 @@
 #include <string.h> 
 #include <sys/socket.h> 
 #include<pthread.h>
+#include <unistd.h>
 #define MAX 100
 #define SockAdd struct sockaddr
-#define PORT 8889
-#define max_thread 30
+#define PORT 8080
+#define max_thread 3000
 
 int mainSock;
 struct sockaddr_in servInfo;
@@ -41,8 +42,16 @@ void *mulClient(void *vargp){
 	bzero(&servInfo, sizeof(servInfo));
 	
 	servInfo.sin_family = AF_INET; 
-	servInfo.sin_addr.s_addr = INADDR_ANY; 
+	//servInfo.sin_addr.s_addr = INADDR_ANY; 
+	//servInfo.sin_addr.s_addr = "10.0.2.15"; 
 	servInfo.sin_port = htons(PORT); 
+
+	// Convert IPv4 and IPv6 addresses from text to binary form 
+	if(inet_pton(AF_INET, "10.0.2.15", &servInfo.sin_addr)<=0)  { 
+		printf("\nInvalid address/ Address not supported \n"); 
+		exit(0);	
+	} 
+
 
 	if(connect(mainSock,(SockAdd*)&servInfo,sizeof(servInfo))!=0){
 		puts("\n Inside Clinet Connection Failed \n");
@@ -73,5 +82,5 @@ int main(){
 		printf("\n after thread_id[%d] joining \n",i);
 	}
 
-return 0;
+	return 0;
 }
